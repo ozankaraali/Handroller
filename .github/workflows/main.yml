@@ -67,8 +67,8 @@ jobs:
           --paths $PACKAGES_PATH/cv2 \
           --paths $PACKAGES_PATH/mediapipe \
           --paths $PACKAGES_PATH/pyautogui \
-          --add-data $PACKAGES_PATH/mediapipe:/mediapipe \
-          --add-data $PACKAGES_PATH/cv2/data:/cv2/data
+          --add-data $PACKAGES_PATH/mediapipe:mediapipe \
+          --add-data $PACKAGES_PATH/cv2/data:cv2/data
       - name: Zip macOS App
         run: |
           cd dist
