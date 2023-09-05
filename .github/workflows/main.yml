@@ -33,14 +33,18 @@ jobs:
         name: packaged-app
         path: dist/main
 
+    - name: Get shortened SHA
+      id: short-sha
+      run: echo "::set-output name=sha::$(echo ${GITHUB_SHA:0:7})"
+
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       with:
-        tag_name: release-${{ github.sha }}.substr(0, 7)
-        release_name: Release ${{ github.sha }}.substr(0, 7)
+        tag_name: release-${{ steps.short-sha.outputs.sha }}
+        release_name: Release ${{ steps.short-sha.outputs.sha }}
         draft: false
         prerelease: false
 
