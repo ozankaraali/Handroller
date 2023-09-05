@@ -53,22 +53,32 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
           python-version: 3.8
+      
       - name: Install dependencies
         run: pip install -r requirements.txt
+
       - name: Package App with PyInstaller for MacOS
         run: |
           pip install pyinstaller
-          pyinstaller --onefile -n handroller main.py
+          # Locate the python packages directory
+          PACKAGES_PATH=$(python -c "import site; print(site.getsitepackages()[0])")
+          # Package the app with PyInstaller
+          pyinstaller -n handroller main.py \
+          --paths $PACKAGES_PATH/cv2 \
+          --paths $PACKAGES_PATH/mediapipe \
+          --paths $PACKAGES_PATH/pyautogui
+
       - name: Upload macOS artifact
         uses: actions/upload-artifact@v2
         with:
           name: packaged-app-macos
-          path: dist/handroller
-
+          path: dist/handroller.app
+          
   release:
     needs: [build-linux, build-windows, build-macos]
     runs-on: ubuntu-latest
