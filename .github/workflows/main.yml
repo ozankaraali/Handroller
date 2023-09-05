@@ -25,7 +25,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: packaged-app-linux
-          path: dist/main
+          path: dist/handroller
 
   build-windows:
     runs-on: windows-latest
@@ -46,7 +46,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: packaged-app-windows
-          path: dist/main.exe
+          path: dist/handroller.exe
 
   build-macos:
     runs-on: macos-latest
@@ -67,7 +67,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: packaged-app-macos
-          path: dist/main
+          path: dist/handroller
 
   release:
     needs: [build-linux, build-windows, build-macos]
@@ -119,4 +119,3 @@ jobs:
           asset_path: ./packaged-app-macos/handroller
           asset_name: handroller-macos
           asset_content_type: application/octet-stream
-
