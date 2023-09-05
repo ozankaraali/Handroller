@@ -68,7 +68,7 @@ jobs:
           # Locate the python packages directory
           PACKAGES_PATH=$(python -c "import site; print(site.getsitepackages()[0])")
           # Package the app with PyInstaller
-          pyinstaller -n handroller main.py \
+          pyinstaller --windowed -n handroller main.py \
           --paths $PACKAGES_PATH/cv2 \
           --paths $PACKAGES_PATH/mediapipe \
           --paths $PACKAGES_PATH/pyautogui
