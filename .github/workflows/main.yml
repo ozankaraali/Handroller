@@ -126,6 +126,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./packaged-app-macos/handroller
-          asset_name: handroller-macos
+          asset_path: ./packaged-app-macos/handroller.app
+          asset_name: handroller-macos.app
           asset_content_type: application/octet-stream
