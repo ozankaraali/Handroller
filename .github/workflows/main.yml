@@ -21,7 +21,7 @@ jobs:
         run: |
           pip install pyinstaller
           PACKAGES_PATH=$(python -c "import site; print(site.getsitepackages()[0])")
-          pyinstaller --windowed -n handroller --icon=assets/handroller.png main.py \
+          pyinstaller --onefile --windowed -n handroller --icon=assets/handroller.png main.py \
           --paths $PACKAGES_PATH/cv2 \
           --paths $PACKAGES_PATH/mediapipe \
           --paths $PACKAGES_PATH/pyautogui \
@@ -56,20 +56,20 @@ jobs:
         run: |
           pip install pyinstaller
           $PACKAGES_PATH = (python -c "import site; print(site.getsitepackages()[0])")
-          pyinstaller --windowed -n handroller --icon=assets/handroller.ico main.py `
+          pyinstaller --onefile --windowed -n handroller --icon=assets/handroller.ico main.py `
           --paths "$env:CV2_PATH" `
           --paths "$env:MEDIAPIPE_PATH" `
           --paths "$PACKAGES_PATH/pyautogui" `
           --add-data "$env:MEDIAPIPE_PATH;mediapipe" `
           --add-data "$env:CV2_PATH/data;cv2/data"
-      - name: Zip the contents of dist directory
-        run: |
-          Compress-Archive -Path dist/handroller/* -DestinationPath dist/handroller.zip
+#      - name: Zip the contents of dist directory
+#        run: |
+#          Compress-Archive -Path dist/handroller/* -DestinationPath dist/handroller.zip
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v2
         with:
           name: packaged-app-windows
-          path: dist/handroller.zip
+          path: dist/handroller.exe
 
   build-macos:
     runs-on: macos-latest
@@ -96,6 +96,9 @@ jobs:
         run: |
           defaults write "$(pwd)/dist/handroller.app/Contents/Info.plist" NSCameraUsageDescription -string "This app requires access to the camera for hand gesture detection."
           defaults write "$(pwd)/dist/handroller.app/Contents/Info.plist" NSAccessibilityUsageDescription -string "This app requires accessibility permissions to control the mouse using hand gestures."
+      - name: Ad-Hoc Sign the app
+        run: |
+          codesign --force --deep --sign - "$(pwd)/dist/handroller.app"
       - name: Zip macOS App
         run: |
           cd dist
@@ -142,8 +145,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./packaged-app-windows/handroller.zip
-          asset_name: handroller-windows.zip
+          asset_path: ./packaged-app-windows/handroller.exe
+          asset_name: handroller-windows.exe
           asset_content_type: application/octet-stream
       - name: Upload macOS Release Asset
         uses: actions/upload-release-asset@v1
