@@ -44,6 +44,11 @@ jobs:
           python-version: 3.8
       - name: Install dependencies
         run: pip install -r requirements.txt
+      - name: Check mediapipe location
+        shell: pwsh
+        run: |
+          $MEDIAPIPE_PATH = (python -c "import mediapipe; print(mediapipe.__path__[0])")
+          echo "MEDIAPIPE_PATH=$MEDIAPIPE_PATH" >> $env:GITHUB_ENV
       - name: Package App with PyInstaller for Windows
         shell: pwsh
         run: |
@@ -51,9 +56,9 @@ jobs:
           $PACKAGES_PATH = (python -c "import site; print(site.getsitepackages()[0])")
           pyinstaller --windowed -n handroller --icon=assets/handroller.ico main.py `
           --paths "$PACKAGES_PATH/cv2" `
-          --paths "$PACKAGES_PATH/mediapipe" `
+          --paths "$env:MEDIAPIPE_PATH" `
           --paths "$PACKAGES_PATH/pyautogui" `
-          --add-data "$PACKAGES_PATH/mediapipe;mediapipe" `
+          --add-data "$env:MEDIAPIPE_PATH;mediapipe" `
           --add-data "$PACKAGES_PATH/cv2/data;cv2/data"
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v2
