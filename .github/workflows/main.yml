@@ -62,6 +62,9 @@ jobs:
           --paths "$PACKAGES_PATH/pyautogui" `
           --add-data "$env:MEDIAPIPE_PATH;mediapipe" `
           --add-data "$env:CV2_PATH/data;cv2/data"
+      - name: List contents of dist directory
+        run: |
+          Get-ChildItem dist -Recurse
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v2
         with:
