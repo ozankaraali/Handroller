@@ -1,5 +1,5 @@
 # Handroller
-![Handroller Icon](assets/handroller.png)
+![Handroller Icon](assets/title.png)
 
 Handroller is a tool that lets you control your mouse using hand gestures, developed out of sheer boredom but with utmost dedication.
 

@@ -45,13 +45,14 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
       - name: Package App with PyInstaller for Windows
+        shell: pwsh
         run: |
           pip install pyinstaller
-          $PACKAGES_PATH = python -c "import site; print(site.getsitepackages()[0])"
+          $PACKAGES_PATH = (python -c "import site; print(site.getsitepackages()[0])")
           pyinstaller --windowed -n handroller --icon=assets/handroller.ico main.py `
-          --paths $PACKAGES_PATH/cv2 `
-          --paths $PACKAGES_PATH/mediapipe `
-          --paths $PACKAGES_PATH/pyautogui `
+          --paths "$PACKAGES_PATH/cv2" `
+          --paths "$PACKAGES_PATH/mediapipe" `
+          --paths "$PACKAGES_PATH/pyautogui" `
           --add-data "$PACKAGES_PATH/mediapipe;mediapipe" `
           --add-data "$PACKAGES_PATH/cv2/data;cv2/data"
       - name: Upload Windows artifact
