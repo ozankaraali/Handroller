@@ -133,8 +133,8 @@ def main():
             cv2.putText(frame, f"y:{index_mcp_y}", (frame_width - 100, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0),
                         1)
 
-        # If display is turned on via command line
-        if args.display:
+        # If display is turned on via command line, bypassing it to debug release
+        if True:
             # Resize the frame for faster display
             display_scale = 0.5  # Adjust this value as needed
             frame = cv2.resize(frame, (int(frame_width * display_scale), int(frame_height * display_scale)))
