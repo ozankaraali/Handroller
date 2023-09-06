@@ -20,7 +20,13 @@ jobs:
       - name: Package App with PyInstaller for Linux
         run: |
           pip install pyinstaller
-          pyinstaller --onefile -n handroller main.py
+          PACKAGES_PATH=$(python -c "import site; print(site.getsitepackages()[0])")
+          pyinstaller --windowed -n handroller --icon=assets/handroller.png main.py \
+          --paths $PACKAGES_PATH/cv2 \
+          --paths $PACKAGES_PATH/mediapipe \
+          --paths $PACKAGES_PATH/pyautogui \
+          --add-data $PACKAGES_PATH/mediapipe:mediapipe \
+          --add-data $PACKAGES_PATH/cv2/data:cv2/data
       - name: Upload Linux artifact
         uses: actions/upload-artifact@v2
         with:
@@ -41,7 +47,13 @@ jobs:
       - name: Package App with PyInstaller for Windows
         run: |
           pip install pyinstaller
-          pyinstaller --onefile -n handroller main.py
+          $PACKAGES_PATH = python -c "import site; print(site.getsitepackages()[0])"
+          pyinstaller --windowed -n handroller --icon=assets/handroller.ico main.py `
+          --paths $PACKAGES_PATH/cv2 `
+          --paths $PACKAGES_PATH/mediapipe `
+          --paths $PACKAGES_PATH/pyautogui `
+          --add-data "$PACKAGES_PATH/mediapipe;mediapipe" `
+          --add-data "$PACKAGES_PATH/cv2/data;cv2/data"
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v2
         with:
@@ -63,12 +75,16 @@ jobs:
         run: |
           pip install pyinstaller
           PACKAGES_PATH=$(python -c "import site; print(site.getsitepackages()[0])")
-          pyinstaller --windowed -n handroller main.py \
+          pyinstaller --windowed -n handroller --icon=assets/handroller.icns main.py \
           --paths $PACKAGES_PATH/cv2 \
           --paths $PACKAGES_PATH/mediapipe \
           --paths $PACKAGES_PATH/pyautogui \
           --add-data $PACKAGES_PATH/mediapipe:mediapipe \
           --add-data $PACKAGES_PATH/cv2/data:cv2/data
+      - name: Modify Info.plist for Camera Access
+        run: |
+          defaults write "$(pwd)/dist/handroller.app/Contents/Info.plist" NSCameraUsageDescription -string "This app requires access to the camera for hand gesture detection."
+          defaults write "$(pwd)/dist/handroller.app/Contents/Info.plist" NSAccessibilityUsageDescription -string "This app requires accessibility permissions to control the mouse using hand gestures."
       - name: Zip macOS App
         run: |
           cd dist
