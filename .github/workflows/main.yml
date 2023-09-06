@@ -62,14 +62,14 @@ jobs:
           --paths "$PACKAGES_PATH/pyautogui" `
           --add-data "$env:MEDIAPIPE_PATH;mediapipe" `
           --add-data "$env:CV2_PATH/data;cv2/data"
-      - name: List contents of dist directory
+      - name: Zip the contents of dist directory
         run: |
-          Get-ChildItem dist -Recurse
+          Compress-Archive -Path dist/handroller/* -DestinationPath dist/handroller.zip
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v2
         with:
           name: packaged-app-windows
-          path: dist/handroller.exe
+          path: dist/handroller.zip
 
   build-macos:
     runs-on: macos-latest
@@ -142,8 +142,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./packaged-app-windows/handroller.exe
-          asset_name: handroller-windows.exe
+          asset_path: ./packaged-app-windows/handroller.zip
+          asset_name: handroller-windows.zip
           asset_content_type: application/octet-stream
       - name: Upload macOS Release Asset
         uses: actions/upload-release-asset@v1
