@@ -55,13 +55,7 @@ jobs:
         shell: pwsh
         run: |
           pip install pyinstaller
-          $PACKAGES_PATH = (python -c "import site; print(site.getsitepackages()[0])")
-          pyinstaller --onefile --windowed -n handroller --icon=assets/handroller.ico main.py `
-          --paths "$env:CV2_PATH" `
-          --paths "$env:MEDIAPIPE_PATH" `
-          --paths "$PACKAGES_PATH/pyautogui" `
-          --add-data "$env:MEDIAPIPE_PATH;mediapipe" `
-          --add-data "$env:CV2_PATH/data;cv2/data"
+          pyinstaller handroller-windows.spec
 #      - name: Zip the contents of dist directory
 #        run: |
 #          Compress-Archive -Path dist/handroller/* -DestinationPath dist/handroller.zip
