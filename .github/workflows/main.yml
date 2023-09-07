@@ -121,7 +121,7 @@ jobs:
       - name: Download all artifacts
         uses: actions/download-artifact@v3
       - name: Upload Linux Release Asset
-        uses: actions/upload-release-asset@v2
+        uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
