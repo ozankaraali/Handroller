@@ -1,10 +1,12 @@
 import site
+import mediapipe
+import cv2
 
 # Determine path to site-packages
 PACKAGES_PATH = site.getsitepackages()[0]
 
-cv2_path = f"{PACKAGES_PATH}/cv2"
-mediapipe_path = f"{PACKAGES_PATH}/mediapipe"
+cv2_path = cv2.__path__[0]
+mediapipe_path = mediapipe.__path__[0]
 pyautogui_path = f"{PACKAGES_PATH}/pyautogui"
 
 block_cipher = None
