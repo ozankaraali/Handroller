@@ -10,9 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: 3.8
       - name: Install dependencies
@@ -28,7 +28,7 @@ jobs:
           --add-data $PACKAGES_PATH/mediapipe:mediapipe \
           --add-data $PACKAGES_PATH/cv2/data:cv2/data
       - name: Upload Linux artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: packaged-app-linux
           path: dist/handroller
@@ -37,9 +37,9 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: 3.8
       - name: Install dependencies
@@ -66,7 +66,7 @@ jobs:
 #        run: |
 #          Compress-Archive -Path dist/handroller/* -DestinationPath dist/handroller.zip
       - name: Upload Windows artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: packaged-app-windows
           path: dist/handroller.exe
@@ -75,9 +75,9 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: 3.8
       - name: Install dependencies
@@ -85,17 +85,7 @@ jobs:
       - name: Package App with PyInstaller for MacOS
         run: |
           pip install pyinstaller
-          PACKAGES_PATH=$(python -c "import site; print(site.getsitepackages()[0])")
-          pyinstaller --windowed -n handroller --icon=assets/handroller.icns main.py \
-          --paths $PACKAGES_PATH/cv2 \
-          --paths $PACKAGES_PATH/mediapipe \
-          --paths $PACKAGES_PATH/pyautogui \
-          --add-data $PACKAGES_PATH/mediapipe:mediapipe \
-          --add-data $PACKAGES_PATH/cv2/data:cv2/data
-      - name: Modify Info.plist for Camera Access
-        run: |
-          defaults write "$(pwd)/dist/handroller.app/Contents/Info.plist" NSCameraUsageDescription -string "This app requires access to the camera for hand gesture detection."
-          defaults write "$(pwd)/dist/handroller.app/Contents/Info.plist" NSAccessibilityUsageDescription -string "This app requires accessibility permissions to control the mouse using hand gestures."
+          pyinstaller handroller.spec
       - name: Ad-Hoc Sign the app
         run: |
           codesign --force --deep --sign - "$(pwd)/dist/handroller.app"
@@ -104,7 +94,7 @@ jobs:
           cd dist
           zip -r handroller-macos.zip handroller.app
       - name: Upload macOS artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: packaged-app-macos
           path: dist/handroller-macos.zip
@@ -129,9 +119,9 @@ jobs:
           draft: false
           prerelease: false
       - name: Download all artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
       - name: Upload Linux Release Asset
-        uses: actions/upload-release-asset@v1
+        uses: actions/upload-release-asset@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
