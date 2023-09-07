@@ -7,6 +7,8 @@ cv2_path = f"{PACKAGES_PATH}/cv2"
 mediapipe_path = f"{PACKAGES_PATH}/mediapipe"
 pyautogui_path = f"{PACKAGES_PATH}/pyautogui"
 
+block_cipher = None
+
 # Add paths to the Analysis object
 a = Analysis(['main.py'],
              pathex=[cv2_path, mediapipe_path, pyautogui_path],
