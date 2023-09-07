@@ -13,7 +13,7 @@ block_cipher = None
 a = Analysis(['main.py'],
              pathex=[cv2_path, mediapipe_path, pyautogui_path],
              binaries=[],
-             datas=[(f"{mediapipe_path}/mediapipe", "mediapipe"),
+             datas=[(f"{mediapipe_path}", "mediapipe"),
                     (f"{cv2_path}/data", "cv2/data")],
              hookspath=[],
              runtime_hooks=[],
